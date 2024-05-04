@@ -9,6 +9,7 @@ import piece.*;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ChessGame {
     private Manager manager;
@@ -128,18 +129,20 @@ public class ChessGame {
             this.suradnice.add(this.suradnica.getY());
             this.suradnice.add(this.suradnica.getX());
 
+            List<List<BoardFrame>> listChessBoard = this.convertTo2DList();
             boolean valid = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().isValidMove(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
+            boolean pieceOnToPosition = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().anotherPieceInPositionIntersection(listChessBoard,this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
             if (this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().getPlayerType().equals(this.tahHraca)) {
-                if (kolidovanie(this.suradnice.get(0), this.suradnice.get(1), this.suradnice.get(2), this.suradnice.get(3))) {
                     if (valid) {
-                        this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().move(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
-                        this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().popis();
-                        System.out.println("Prva");
-                        this.chessBoard[this.suradnice.get(2)][this.suradnice.get(3)].getPiece().popis();
-                        System.out.println("Druha");
-                        this.zmenHraca();
+                        if (!pieceOnToPosition) {
+                            this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().move(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
+                            this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().popis();
+                            System.out.println("Prva");
+                            this.chessBoard[this.suradnice.get(2)][this.suradnice.get(3)].getPiece().popis();
+                            System.out.println("Druha");
+                            this.zmenHraca();
+                        }
                     }
-                }
                 System.out.println("Hrac na tahu");
                 System.out.println(this.tahHraca);
             }
@@ -151,24 +154,6 @@ public class ChessGame {
         }
     }
 
-    public Boolean kolidovanie(int polohaPrvejX , int polohaPrvejY , int polohaDruhejX , int polohaDruhejY) {
-        Piece prva =this.chessBoard[polohaPrvejX][polohaPrvejY].getPiece();
-        Piece druha =this.chessBoard[polohaDruhejX][polohaDruhejY].getPiece();
-
-        if (chessBoard[polohaPrvejX][polohaPrvejY].getPiece() instanceof Bishop) {
-
-        }
-
-        if (chessBoard[polohaPrvejX][polohaPrvejY].getPiece() instanceof Rook) {
-
-        }
-
-        if (chessBoard[polohaPrvejX][polohaPrvejY].getPiece() instanceof Queen) {
-
-        }
-        return true;
-    }
-
     public PlayerType zmenHraca() {
         if (this.tahHraca.equals(PlayerType.WHITE)) {
             this.tahHraca = PlayerType.BLACK;
@@ -176,5 +161,20 @@ public class ChessGame {
             this.tahHraca = PlayerType.WHITE;
         }
         return this.tahHraca;
+    }
+
+    //Code taken from AI, chatGPT
+    public List<List<BoardFrame>> convertTo2DList() {
+        List<List<BoardFrame>> list = new ArrayList<>();
+
+        for (BoardFrame[] row : this.chessBoard) {
+            List<BoardFrame> rowList = new ArrayList<>();
+            for (BoardFrame frame : row) {
+                rowList.add(frame);
+            }
+            list.add(rowList);
+        }
+
+        return list;
     }
 }

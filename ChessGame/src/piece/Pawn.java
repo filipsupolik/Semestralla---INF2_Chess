@@ -3,6 +3,8 @@ package piece;
 import enums.PlayerType;
 import hlavnybalicek.BoardFrame;
 
+import java.util.List;
+
 public class Pawn extends Piece {
 
     private boolean firstMove;
@@ -21,7 +23,7 @@ public class Pawn extends Piece {
         int frameToX = toFrame.getX();
         int frameToY = toFrame.getY();
 
-        if (validChessBoardBorderss(frameFromX, frameFromY, frameToX, frameToY)) return false;
+        if (notValidChessBoardBorderss(frameFromX, frameFromY, frameToX, frameToY)) return false;
 
         if (Math.abs(frameFromY - frameToY) > 2) {
             System.out.println("Vacsi rozdiel ako 2");
@@ -61,21 +63,17 @@ public class Pawn extends Piece {
         return true;
     }
 
-    private static boolean validChessBoardBorderss(int frameFromX, int frameFromY, int frameToX, int frameToY) {
-        if (!(frameFromX >= 0 && frameFromX <= 7 && frameFromY >= 0 && frameFromY <= 7)) {
-            System.out.println("Mimo hranice Z");
-            return true;
-        }
-
-        if (!(frameToX >= 0 && frameToX <= 7 && frameToY >= 0 && frameToY <= 7)) {
-            System.out.println("mimo hranice Do");
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public void popis() {
         System.out.println(this.nazov);
+    }
+
+    @Override
+    public boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
+        boolean isIntersected = false;
+        if (!toFrame.isEmpty()) {
+            isIntersected = true;
+        }
+        return isIntersected;
     }
 }

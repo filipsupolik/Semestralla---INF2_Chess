@@ -4,6 +4,8 @@ import enums.PlayerType;
 import fri.shapesge.Image;
 import hlavnybalicek.BoardFrame;
 
+import java.util.List;
+
 public abstract class Piece {
     private int x;
     private int y;
@@ -53,6 +55,18 @@ public abstract class Piece {
         toFrame.getPiece().getImageOfPiece().changePosition(x*100, y*100);
         toFrame.getPiece().makeVisible();
     }
+    public boolean notValidChessBoardBorderss(int frameFromX, int frameFromY, int frameToX, int frameToY) {
+        if (!(frameFromX >= 0 && frameFromX <= 7 && frameFromY >= 0 && frameFromY <= 7)) {
+            System.out.println("Mimo hranice Z");
+            return true;
+        }
+
+        if (!(frameToX >= 0 && frameToX <= 7 && frameToY >= 0 && frameToY <= 7)) {
+            System.out.println("mimo hranice Do");
+            return true;
+        }
+        return false;
+    }
 
     public int getX() {
         return x;
@@ -70,4 +84,6 @@ public abstract class Piece {
         this.y = y;
     }
     public abstract void popis();
+
+    public abstract boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame);
 }

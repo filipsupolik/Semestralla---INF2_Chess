@@ -3,6 +3,8 @@ package piece;
 import enums.PlayerType;
 import hlavnybalicek.BoardFrame;
 
+import java.util.List;
+
 
 public class Knight extends Piece {
 
@@ -20,15 +22,7 @@ public class Knight extends Piece {
         int frameToX = toFrame.getX();
         int frameToY = toFrame.getY();
 
-        if (!(frameFromX >= 0 && frameFromX <= 7 && frameFromY >= 0 && frameFromY <= 7)) {
-            System.out.println("Mimo hranice Z");
-            return false;
-        }
-
-        if (!(frameToX >= 0 && frameToX <= 7 && frameToY >= 0 && frameToY <= 7)) {
-            System.out.println("mimo hranice Do");
-            return false;
-        }
+        if (notValidChessBoardBorderss(frameFromX, frameFromY, frameToX, frameToY)) return false;
 
         if (!(Math.abs(frameFromX - frameToX) == 2 && Math.abs(frameFromY - frameToY) == 1 || Math.abs(frameFromX - frameToX) == 1 && Math.abs(frameFromY - frameToY) == 2)) {
             System.out.println("Pohyb nie je v tvare L");
@@ -41,6 +35,11 @@ public class Knight extends Piece {
     @Override
     public void popis() {
         System.out.println(this.nazov);
+    }
+
+    @Override
+    public boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
+        return false;
     }
 
 }

@@ -3,6 +3,8 @@ package piece;
 import enums.PlayerType;
 import hlavnybalicek.BoardFrame;
 
+import java.util.List;
+
 public class Empty extends Piece {
 
     private String nazov;
@@ -19,5 +21,10 @@ public class Empty extends Piece {
     @Override
     public void popis() {
         System.out.println(this.nazov);
+    }
+
+    @Override
+    public boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
+        return false;
     }
 }
