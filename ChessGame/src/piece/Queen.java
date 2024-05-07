@@ -20,7 +20,9 @@ public class Queen extends Piece {
         int frameToX = toFrame.getX();
         int frameToY = toFrame.getY();
 
-        if (notValidChessBoardBorderss(frameFromX, frameFromY, frameToX, frameToY)) return false;
+        if (notValidChessBoardBorderss(frameFromX, frameFromY, frameToX, frameToY)) {
+            return false;
+        }
 
         return true;
     }
@@ -33,38 +35,25 @@ public class Queen extends Piece {
     @Override
     public boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
         boolean isIntersected = false;
+        int deltaX = toFrame.getX() - fromFrame.getX();
+        int deltaY = toFrame.getY() - fromFrame.getY();
         //pohyb hore
-        if (toFrame.getY() < fromFrame.getY()) {
-            for (int i = fromFrame.getY(); i > toFrame.getY(); i--) {
-                if (!chessBoard.get(i - 1).get(this.getX()).isEmpty()) {
-                    isIntersected = true;
-                }
-            }
-        }
+        isIntersected = this.upperMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
         //pohyb dole
-        if (toFrame.getY() > fromFrame.getY()) {
-            for (int i = fromFrame.getY(); i < toFrame.getY(); i++) {
-                if (!chessBoard.get(i + 1).get(this.getX()).isEmpty()) {
-                    isIntersected = true;
-                }
-            }
-        }
+        isIntersected = this.downMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
         //pohyb vpravo
-        if (toFrame.getX() > fromFrame.getX()) {
-            for (int i = fromFrame.getX(); i < toFrame.getX(); i++) {
-                if (!chessBoard.get(this.getY()).get(i  + 1).isEmpty()) {
-                    isIntersected = true;
-                }
-            }
-        }
+        isIntersected = this.rightMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
         //pohyb vlavo
-        if (toFrame.getX() < fromFrame.getX()) {
-            for (int i = fromFrame.getX(); i > toFrame.getX(); i--) {
-                if (!chessBoard.get(this.getY()).get(i -1).isEmpty()) {
-                    isIntersected = true;
-                }
-            }
-        }
+        isIntersected = this.leftMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
+        //pohyb diagonalne
+        //hore-vpravo
+        isIntersected = this.upRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
+        //hore-vlavo
+        isIntersected = this.upLeftMovementIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
+        //dole - vpravo
+        isIntersected = this.downRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
+        //dole - vlavo
+        isIntersected = this.downLeftIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
         return isIntersected;
     }
 }

@@ -20,7 +20,9 @@ public class Bishop extends Piece {
         int frameToX = toFrame.getX();
         int frameToY = toFrame.getY();
 
-        if (notValidChessBoardBorderss(frameFromX, frameFromY, frameToX, frameToY)) return false;
+        if (this.notValidChessBoardBorderss(frameFromX, frameFromY, frameToX, frameToY)) {
+            return false;
+        }
 
         if (!(Math.abs(frameFromX - frameToX) == Math.abs(frameFromY - frameToY))) {
             System.out.println("pohyb nie je diagonalne");
@@ -42,47 +44,14 @@ public class Bishop extends Piece {
 
         int deltaX = toFrame.getX() - fromFrame.getX();
         int deltaY = toFrame.getY() - fromFrame.getY();
-
-// Check if the movement is diagonal
-        if (Math.abs(deltaX) == Math.abs(deltaY)) {
-            // Movement direction: up-right
-            if (deltaX > 0 && deltaY < 0) {
-                for (int i = 1; i < Math.abs(deltaX); i++) {
-                    if (!chessBoard.get(fromFrame.getY() - i).get(fromFrame.getX() + i).isEmpty()) {
-                        isIntersected = true;
-                        break;
-                    }
-                }
-            }
-            // Movement direction: up-left
-            else if (deltaX < 0 && deltaY < 0) {
-                for (int i = 1; i < Math.abs(deltaX); i++) {
-                    if (!chessBoard.get(fromFrame.getY() - i).get(fromFrame.getX() - i).isEmpty()) {
-                        isIntersected = true;
-                        break;
-                    }
-                }
-            }
-            // Movement direction: down-right
-            else if (deltaX > 0 && deltaY > 0) {
-                for (int i = 1; i < Math.abs(deltaX); i++) {
-                    if (!chessBoard.get(fromFrame.getY() + i).get(fromFrame.getX() + i).isEmpty()) {
-                        isIntersected = true;
-                        break;
-                    }
-                }
-            }
-            // Movement direction: down-left
-            else if (deltaX < 0 && deltaY > 0) {
-                for (int i = 1; i < Math.abs(deltaX); i++) {
-                    if (!chessBoard.get(fromFrame.getY() + i).get(fromFrame.getX() - i).isEmpty()) {
-                        isIntersected = true;
-                        break;
-                    }
-                }
-            }
-        }
-
+        // Movement direction: up-right
+        isIntersected = this.upRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
+        // Movement direction: up-left
+        isIntersected = this.upLeftMovementIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
+        // Movement direction: down-right
+        isIntersected = this.downRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
+        // Movement direction: down-left
+        isIntersected = this.downLeftIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
         return isIntersected;
 
     }

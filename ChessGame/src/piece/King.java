@@ -43,10 +43,6 @@ public class King extends Piece {
 
     @Override
     public boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
-        boolean isIntersected = false;
-        if (!toFrame.isEmpty()) {
-            isIntersected = true;
-        }
-        return isIntersected;
+        return this.collisionForPawnAndKing(toFrame);
     }
 }

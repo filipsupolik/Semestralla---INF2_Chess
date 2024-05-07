@@ -67,6 +67,108 @@ public abstract class Piece {
         }
         return false;
     }
+    public boolean collisionForPawnAndKing(BoardFrame toFrame) {
+        boolean isIntersected = false;
+        if (!toFrame.isEmpty()) {
+            isIntersected = true;
+        }
+        return isIntersected;
+    }
+    public boolean leftMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame, boolean isIntersected) {
+        if (toFrame.getX() < fromFrame.getX()) {
+            for (int i = fromFrame.getX(); i > toFrame.getX(); i--) {
+                if (!chessBoard.get(this.getY()).get(i -1).isEmpty()) {
+                    isIntersected = true;
+                    break;
+                }
+            }
+        }
+        return isIntersected;
+    }
+
+    public boolean rightMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame, boolean isIntersected) {
+        if (toFrame.getX() > fromFrame.getX()) {
+            for (int i = fromFrame.getX(); i < toFrame.getX(); i++) {
+                if (!chessBoard.get(this.getY()).get(i  + 1).isEmpty()) {
+                    isIntersected = true;
+                    break;
+                }
+            }
+        }
+        return isIntersected;
+    }
+
+    public boolean downMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame, boolean isIntersected) {
+        if (toFrame.getY() > fromFrame.getY()) {
+            for (int i = fromFrame.getY(); i < toFrame.getY(); i++) {
+                if (!chessBoard.get(i + 1).get(this.getX()).isEmpty()) {
+                    isIntersected = true;
+                    break;
+                }
+            }
+        }
+        return isIntersected;
+    }
+
+    public boolean upperMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame, boolean isIntersected) {
+        if (toFrame.getY() < fromFrame.getY()) {
+            for (int i = fromFrame.getY(); i > toFrame.getY(); i--) {
+                if (!chessBoard.get(i - 1).get(this.getX()).isEmpty()) {
+                    isIntersected = true;
+                    break;
+                }
+            }
+        }
+        return isIntersected;
+    }
+
+    public boolean downLeftIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY, boolean isIntersected) {
+        if (deltaX < 0 && deltaY > 0) {
+            for (int i = 1; i < Math.abs(deltaX); i++) {
+                if (!chessBoard.get(fromFrame.getY() + i).get(fromFrame.getX() - i).isEmpty()) {
+                    isIntersected = true;
+                    break;
+                }
+            }
+        }
+        return isIntersected;
+    }
+
+    public boolean downRightMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY, boolean isIntersected) {
+        if (deltaX > 0 && deltaY > 0) {
+            for (int i = 1; i < Math.abs(deltaX); i++) {
+                if (!chessBoard.get(fromFrame.getY() + i).get(fromFrame.getX() + i).isEmpty()) {
+                    isIntersected = true;
+                    break;
+                }
+            }
+        }
+        return isIntersected;
+    }
+
+    public boolean upLeftMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY, boolean isIntersected) {
+        if (deltaX < 0 && deltaY < 0) {
+            for (int i = 1; i < Math.abs(deltaX); i++) {
+                if (!chessBoard.get(fromFrame.getY() - i).get(fromFrame.getX() - i).isEmpty()) {
+                    isIntersected = true;
+                    break;
+                }
+            }
+        }
+        return isIntersected;
+    }
+
+    public boolean upRightMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY, boolean isIntersected) {
+        if (deltaX > 0 && deltaY < 0) {
+            for (int i = 1; i < Math.abs(deltaX); i++) {
+                if (!chessBoard.get(fromFrame.getY() - i).get(fromFrame.getX() + i).isEmpty()) {
+                    isIntersected = true;
+                    break;
+                }
+            }
+        }
+        return isIntersected;
+    }
 
     public int getX() {
         return x;

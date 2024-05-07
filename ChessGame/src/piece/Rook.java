@@ -40,43 +40,17 @@ public class Rook extends Piece {
     public boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
         boolean isIntersected = false;
         //pohyb hore
-        if (toFrame.getY() < fromFrame.getY()) {
-            for (int i = fromFrame.getY(); i > toFrame.getY(); i--) {
-                if (!chessBoard.get(i - 1).get(this.getX()).isEmpty()) {
-                    isIntersected = true;
-                    break;
-                }
-            }
-        }
+        isIntersected = this.upperMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
         //pohyb dole
-        if (toFrame.getY() > fromFrame.getY()) {
-            for (int i = fromFrame.getY(); i < toFrame.getY(); i++) {
-                if (!chessBoard.get(i + 1).get(this.getX()).isEmpty()) {
-                    isIntersected = true;
-                    break;
-                }
-            }
-        }
+        isIntersected = this.downMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
         //pohyb vpravo
-        if (toFrame.getX() > fromFrame.getX()) {
-            for (int i = fromFrame.getX(); i < toFrame.getX(); i++) {
-                if (!chessBoard.get(this.getY()).get(i  + 1).isEmpty()) {
-                    isIntersected = true;
-                    break;
-                }
-            }
-        }
+        isIntersected = this.rightMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
         //pohyb vlavo
-        if (toFrame.getX() < fromFrame.getX()) {
-            for (int i = fromFrame.getX(); i > toFrame.getX(); i--) {
-                if (!chessBoard.get(this.getY()).get(i -1).isEmpty()) {
-                    isIntersected = true;
-                    break;
-                }
-            }
-        }
+        isIntersected = this.leftMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
         return isIntersected;
     }
+
+
 
     @Override
     public String toString() {
