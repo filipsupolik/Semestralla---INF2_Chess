@@ -35,8 +35,55 @@ public class Bishop extends Piece {
         System.out.println(this.nazov);
     }
 
+    //AI generated code
     @Override
     public boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
-        return false;
+        boolean isIntersected = false;
+
+        int deltaX = toFrame.getX() - fromFrame.getX();
+        int deltaY = toFrame.getY() - fromFrame.getY();
+
+// Check if the movement is diagonal
+        if (Math.abs(deltaX) == Math.abs(deltaY)) {
+            // Movement direction: up-right
+            if (deltaX > 0 && deltaY < 0) {
+                for (int i = 1; i < Math.abs(deltaX); i++) {
+                    if (!chessBoard.get(fromFrame.getY() - i).get(fromFrame.getX() + i).isEmpty()) {
+                        isIntersected = true;
+                        break;
+                    }
+                }
+            }
+            // Movement direction: up-left
+            else if (deltaX < 0 && deltaY < 0) {
+                for (int i = 1; i < Math.abs(deltaX); i++) {
+                    if (!chessBoard.get(fromFrame.getY() - i).get(fromFrame.getX() - i).isEmpty()) {
+                        isIntersected = true;
+                        break;
+                    }
+                }
+            }
+            // Movement direction: down-right
+            else if (deltaX > 0 && deltaY > 0) {
+                for (int i = 1; i < Math.abs(deltaX); i++) {
+                    if (!chessBoard.get(fromFrame.getY() + i).get(fromFrame.getX() + i).isEmpty()) {
+                        isIntersected = true;
+                        break;
+                    }
+                }
+            }
+            // Movement direction: down-left
+            else if (deltaX < 0 && deltaY > 0) {
+                for (int i = 1; i < Math.abs(deltaX); i++) {
+                    if (!chessBoard.get(fromFrame.getY() + i).get(fromFrame.getX() - i).isEmpty()) {
+                        isIntersected = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return isIntersected;
+
     }
 }

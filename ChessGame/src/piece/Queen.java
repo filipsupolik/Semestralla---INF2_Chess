@@ -32,6 +32,39 @@ public class Queen extends Piece {
 
     @Override
     public boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
-        return false;
+        boolean isIntersected = false;
+        //pohyb hore
+        if (toFrame.getY() < fromFrame.getY()) {
+            for (int i = fromFrame.getY(); i > toFrame.getY(); i--) {
+                if (!chessBoard.get(i - 1).get(this.getX()).isEmpty()) {
+                    isIntersected = true;
+                }
+            }
+        }
+        //pohyb dole
+        if (toFrame.getY() > fromFrame.getY()) {
+            for (int i = fromFrame.getY(); i < toFrame.getY(); i++) {
+                if (!chessBoard.get(i + 1).get(this.getX()).isEmpty()) {
+                    isIntersected = true;
+                }
+            }
+        }
+        //pohyb vpravo
+        if (toFrame.getX() > fromFrame.getX()) {
+            for (int i = fromFrame.getX(); i < toFrame.getX(); i++) {
+                if (!chessBoard.get(this.getY()).get(i  + 1).isEmpty()) {
+                    isIntersected = true;
+                }
+            }
+        }
+        //pohyb vlavo
+        if (toFrame.getX() < fromFrame.getX()) {
+            for (int i = fromFrame.getX(); i > toFrame.getX(); i--) {
+                if (!chessBoard.get(this.getY()).get(i -1).isEmpty()) {
+                    isIntersected = true;
+                }
+            }
+        }
+        return isIntersected;
     }
 }

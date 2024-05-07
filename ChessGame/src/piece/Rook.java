@@ -44,6 +44,7 @@ public class Rook extends Piece {
             for (int i = fromFrame.getY(); i > toFrame.getY(); i--) {
                 if (!chessBoard.get(i - 1).get(this.getX()).isEmpty()) {
                     isIntersected = true;
+                    break;
                 }
             }
         }
@@ -52,6 +53,7 @@ public class Rook extends Piece {
             for (int i = fromFrame.getY(); i < toFrame.getY(); i++) {
                 if (!chessBoard.get(i + 1).get(this.getX()).isEmpty()) {
                     isIntersected = true;
+                    break;
                 }
             }
         }
@@ -60,6 +62,7 @@ public class Rook extends Piece {
             for (int i = fromFrame.getX(); i < toFrame.getX(); i++) {
                 if (!chessBoard.get(this.getY()).get(i  + 1).isEmpty()) {
                     isIntersected = true;
+                    break;
                 }
             }
         }
@@ -68,6 +71,7 @@ public class Rook extends Piece {
             for (int i = fromFrame.getX(); i > toFrame.getX(); i--) {
                 if (!chessBoard.get(this.getY()).get(i -1).isEmpty()) {
                     isIntersected = true;
+                    break;
                 }
             }
         }
