@@ -34,26 +34,16 @@ public class Queen extends Piece {
 
     @Override
     public boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
-        boolean isIntersected = false;
         int deltaX = toFrame.getX() - fromFrame.getX();
         int deltaY = toFrame.getY() - fromFrame.getY();
         //pohyb hore
-        isIntersected = this.upperMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
-        //pohyb dole
-        isIntersected = this.downMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
-        //pohyb vpravo
-        isIntersected = this.rightMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
-        //pohyb vlavo
-        isIntersected = this.leftMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
-        //pohyb diagonalne
-        //hore-vpravo
-        isIntersected = this.upRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
-        //hore-vlavo
-        isIntersected = this.upLeftMovementIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
-        //dole - vpravo
-        isIntersected = this.downRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
-        //dole - vlavo
-        isIntersected = this.downLeftIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
-        return isIntersected;
+        return this.upperMovementIntersection(chessBoard, fromFrame, toFrame) ||
+                this.downMovementIntersection(chessBoard, fromFrame, toFrame) ||
+                this.rightMovementIntersection(chessBoard, fromFrame, toFrame) ||
+                this.leftMovementIntersection(chessBoard, fromFrame, toFrame) ||
+                this.upRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY) ||
+                this.upLeftMovementIntersection(chessBoard, fromFrame, deltaX, deltaY) ||
+                this.downRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY) ||
+                this.downLeftMovementIntersection(chessBoard, fromFrame, deltaX, deltaY);
     }
 }

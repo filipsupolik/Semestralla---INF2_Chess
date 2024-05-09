@@ -45,13 +45,13 @@ public class Bishop extends Piece {
         int deltaX = toFrame.getX() - fromFrame.getX();
         int deltaY = toFrame.getY() - fromFrame.getY();
         // Movement direction: up-right
-        isIntersected = this.upRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
+        isIntersected = this.upRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY);
         // Movement direction: up-left
-        isIntersected = this.upLeftMovementIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
+        isIntersected = this.upLeftMovementIntersection(chessBoard, fromFrame, deltaX, deltaY);
         // Movement direction: down-right
-        isIntersected = this.downRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
+        isIntersected = this.downRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY);
         // Movement direction: down-left
-        isIntersected = this.downLeftIntersection(chessBoard, fromFrame, deltaX, deltaY, isIntersected);
+        isIntersected = this.downLeftMovementIntersection(chessBoard, fromFrame, deltaX, deltaY);
         return isIntersected;
 
     }

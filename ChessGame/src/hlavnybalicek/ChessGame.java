@@ -7,7 +7,6 @@ import fri.shapesge.Square;
 import movement.Suradnice;
 import piece.*;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,18 +130,18 @@ public class ChessGame {
 
             List<List<BoardFrame>> listChessBoard = this.convertTo2DList();
             boolean valid = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().isValidMove(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
-            boolean pieceOnToPosition = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().anotherPieceInPositionIntersection(listChessBoard,this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
+            boolean pieceIntersection = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().anotherPieceInPositionIntersection(listChessBoard,this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
+            boolean oppositeColor = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().checkColor(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
             if (this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().getPlayerType().equals(this.tahHraca)) {
-                    if (valid) {
-                        if (!pieceOnToPosition) {
+                if (valid) {
+                    if (!pieceIntersection) {
+//                        if (oppositeColor) {
+                            this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().vymaz(chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
                             this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().move(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
-                            this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().popis();
-                            System.out.println("Prva");
-                            this.chessBoard[this.suradnice.get(2)][this.suradnice.get(3)].getPiece().popis();
-                            System.out.println("Druha");
                             this.zmenHraca();
-                        }
+//                        }
                     }
+                }
                 System.out.println("Hrac na tahu");
                 System.out.println(this.tahHraca);
             }

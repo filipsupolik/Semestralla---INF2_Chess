@@ -4,6 +4,7 @@ import enums.PlayerType;
 import fri.shapesge.Image;
 import hlavnybalicek.BoardFrame;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Piece {
@@ -11,12 +12,14 @@ public abstract class Piece {
     private int y;
     private Image imageOfPiece;
     private final PlayerType playerType;
+    private List<Piece> ereasedPieces;
 
     public Piece(PlayerType playerType, String imagePath, int x,int y) {
         this.x = x;
         this.y = y;
         this.imageOfPiece = new Image(imagePath, x*100, y*100);
         this.playerType = playerType;
+        this.ereasedPieces = new ArrayList<>();
     }
 
     public Image getImageOfPiece() {
@@ -55,7 +58,18 @@ public abstract class Piece {
         toFrame.getPiece().getImageOfPiece().changePosition(x*100, y*100);
         toFrame.getPiece().makeVisible();
     }
-    public boolean notValidChessBoardBorderss(int frameFromX, int frameFromY, int frameToX, int frameToY) {
+
+    public boolean checkColor(BoardFrame fromFrame, BoardFrame toFrame) {
+        boolean oppositeColor = true;
+        if (!toFrame.isEmpty()) {
+            if (fromFrame.getPiece().getPlayerType().equals(toFrame.getPiece().getPlayerType())) {
+                System.out.println("Rovnaka farba nemoze sa pohnut");
+                oppositeColor = false;
+            }
+        }
+        return oppositeColor;
+    }
+    protected boolean notValidChessBoardBorderss(int frameFromX, int frameFromY, int frameToX, int frameToY) {
         if (!(frameFromX >= 0 && frameFromX <= 7 && frameFromY >= 0 && frameFromY <= 7)) {
             System.out.println("Mimo hranice Z");
             return true;
@@ -67,14 +81,15 @@ public abstract class Piece {
         }
         return false;
     }
-    public boolean collisionForPawnAndKing(BoardFrame toFrame) {
+    protected boolean collisionForPawnAndKing(BoardFrame toFrame) {
         boolean isIntersected = false;
         if (!toFrame.isEmpty()) {
             isIntersected = true;
         }
         return isIntersected;
     }
-    public boolean leftMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame, boolean isIntersected) {
+    protected boolean leftMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
+        boolean isIntersected = false;
         if (toFrame.getX() < fromFrame.getX()) {
             for (int i = fromFrame.getX(); i > toFrame.getX(); i--) {
                 if (!chessBoard.get(this.getY()).get(i -1).isEmpty()) {
@@ -86,7 +101,8 @@ public abstract class Piece {
         return isIntersected;
     }
 
-    public boolean rightMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame, boolean isIntersected) {
+    protected boolean rightMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
+        boolean isIntersected = false;
         if (toFrame.getX() > fromFrame.getX()) {
             for (int i = fromFrame.getX(); i < toFrame.getX(); i++) {
                 if (!chessBoard.get(this.getY()).get(i  + 1).isEmpty()) {
@@ -98,7 +114,8 @@ public abstract class Piece {
         return isIntersected;
     }
 
-    public boolean downMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame, boolean isIntersected) {
+    protected boolean downMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
+        boolean isIntersected = false;
         if (toFrame.getY() > fromFrame.getY()) {
             for (int i = fromFrame.getY(); i < toFrame.getY(); i++) {
                 if (!chessBoard.get(i + 1).get(this.getX()).isEmpty()) {
@@ -110,7 +127,8 @@ public abstract class Piece {
         return isIntersected;
     }
 
-    public boolean upperMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame, boolean isIntersected) {
+    protected boolean upperMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
+        boolean isIntersected = false;
         if (toFrame.getY() < fromFrame.getY()) {
             for (int i = fromFrame.getY(); i > toFrame.getY(); i--) {
                 if (!chessBoard.get(i - 1).get(this.getX()).isEmpty()) {
@@ -122,7 +140,8 @@ public abstract class Piece {
         return isIntersected;
     }
 
-    public boolean downLeftIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY, boolean isIntersected) {
+    protected boolean downLeftMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY) {
+        boolean isIntersected = false;
         if (deltaX < 0 && deltaY > 0) {
             for (int i = 1; i < Math.abs(deltaX); i++) {
                 if (!chessBoard.get(fromFrame.getY() + i).get(fromFrame.getX() - i).isEmpty()) {
@@ -134,7 +153,8 @@ public abstract class Piece {
         return isIntersected;
     }
 
-    public boolean downRightMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY, boolean isIntersected) {
+    protected boolean downRightMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY) {
+        boolean isIntersected = false;
         if (deltaX > 0 && deltaY > 0) {
             for (int i = 1; i < Math.abs(deltaX); i++) {
                 if (!chessBoard.get(fromFrame.getY() + i).get(fromFrame.getX() + i).isEmpty()) {
@@ -146,7 +166,8 @@ public abstract class Piece {
         return isIntersected;
     }
 
-    public boolean upLeftMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY, boolean isIntersected) {
+    protected boolean upLeftMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY) {
+        boolean isIntersected = false;
         if (deltaX < 0 && deltaY < 0) {
             for (int i = 1; i < Math.abs(deltaX); i++) {
                 if (!chessBoard.get(fromFrame.getY() - i).get(fromFrame.getX() - i).isEmpty()) {
@@ -158,7 +179,8 @@ public abstract class Piece {
         return isIntersected;
     }
 
-    public boolean upRightMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY, boolean isIntersected) {
+    protected boolean upRightMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY) {
+        boolean isIntersected = false;
         if (deltaX > 0 && deltaY < 0) {
             for (int i = 1; i < Math.abs(deltaX); i++) {
                 if (!chessBoard.get(fromFrame.getY() - i).get(fromFrame.getX() + i).isEmpty()) {
@@ -188,4 +210,8 @@ public abstract class Piece {
     public abstract void popis();
 
     public abstract boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame);
+
+    public void vymaz(BoardFrame toFrame) {
+        toFrame.getPiece().notVisible();
+    }
 }

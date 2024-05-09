@@ -40,13 +40,13 @@ public class Rook extends Piece {
     public boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
         boolean isIntersected = false;
         //pohyb hore
-        isIntersected = this.upperMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
+        isIntersected = this.upperMovementIntersection(chessBoard, fromFrame, toFrame);
         //pohyb dole
-        isIntersected = this.downMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
+        isIntersected = this.downMovementIntersection(chessBoard, fromFrame, toFrame);
         //pohyb vpravo
-        isIntersected = this.rightMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
+        isIntersected = this.rightMovementIntersection(chessBoard, fromFrame, toFrame);
         //pohyb vlavo
-        isIntersected = this.leftMovementIntersection(chessBoard, fromFrame, toFrame, isIntersected);
+        isIntersected = this.leftMovementIntersection(chessBoard, fromFrame, toFrame);
         return isIntersected;
     }
 
