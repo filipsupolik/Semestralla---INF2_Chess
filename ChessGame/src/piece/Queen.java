@@ -36,14 +36,21 @@ public class Queen extends Piece {
     public boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
         int deltaX = toFrame.getX() - fromFrame.getX();
         int deltaY = toFrame.getY() - fromFrame.getY();
-        //pohyb hore
+        if (deltaX > 0 && deltaY < 0) {
+            return this.upRightMovementIntersection(chessBoard, fromFrame, deltaX);
+        }
+        if (deltaX < 0 && deltaY < 0) {
+            return this.upLeftMovementIntersection(chessBoard, fromFrame, deltaX);
+        }
+        if (deltaX > 0 && deltaY > 0) {
+            return this.downRightMovementIntersection(chessBoard, fromFrame, deltaX);
+        }
+        if (deltaX < 0 && deltaY > 0) {
+           return this.downLeftMovementIntersection(chessBoard, fromFrame, deltaX);
+        }
         return this.upperMovementIntersection(chessBoard, fromFrame, toFrame) ||
                 this.downMovementIntersection(chessBoard, fromFrame, toFrame) ||
                 this.rightMovementIntersection(chessBoard, fromFrame, toFrame) ||
-                this.leftMovementIntersection(chessBoard, fromFrame, toFrame) ||
-                this.upRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY) ||
-                this.upLeftMovementIntersection(chessBoard, fromFrame, deltaX, deltaY) ||
-                this.downRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY) ||
-                this.downLeftMovementIntersection(chessBoard, fromFrame, deltaX, deltaY);
+                this.leftMovementIntersection(chessBoard, fromFrame, toFrame);
     }
 }

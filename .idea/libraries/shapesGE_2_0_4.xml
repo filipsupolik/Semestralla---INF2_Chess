@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="shapesGE-2.0.4">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Downloads/shapesGE-2.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/shapesGE-2.0.4.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

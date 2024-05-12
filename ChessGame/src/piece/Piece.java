@@ -140,55 +140,47 @@ public abstract class Piece {
         return isIntersected;
     }
 
-    protected boolean downLeftMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY) {
+    protected boolean downLeftMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX) {
         boolean isIntersected = false;
-        if (deltaX < 0 && deltaY > 0) {
             for (int i = 1; i < Math.abs(deltaX); i++) {
                 if (!chessBoard.get(fromFrame.getY() + i).get(fromFrame.getX() - i).isEmpty()) {
                     isIntersected = true;
                     break;
                 }
             }
-        }
         return isIntersected;
     }
 
-    protected boolean downRightMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY) {
+    protected boolean downRightMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX) {
         boolean isIntersected = false;
-        if (deltaX > 0 && deltaY > 0) {
             for (int i = 1; i < Math.abs(deltaX); i++) {
                 if (!chessBoard.get(fromFrame.getY() + i).get(fromFrame.getX() + i).isEmpty()) {
                     isIntersected = true;
                     break;
                 }
             }
-        }
         return isIntersected;
     }
 
-    protected boolean upLeftMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY) {
+    protected boolean upLeftMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX) {
         boolean isIntersected = false;
-        if (deltaX < 0 && deltaY < 0) {
             for (int i = 1; i < Math.abs(deltaX); i++) {
                 if (!chessBoard.get(fromFrame.getY() - i).get(fromFrame.getX() - i).isEmpty()) {
                     isIntersected = true;
                     break;
                 }
-            }
         }
         return isIntersected;
     }
 
-    protected boolean upRightMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX, int deltaY) {
+    protected boolean upRightMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, int deltaX) {
         boolean isIntersected = false;
-        if (deltaX > 0 && deltaY < 0) {
             for (int i = 1; i < Math.abs(deltaX); i++) {
                 if (!chessBoard.get(fromFrame.getY() - i).get(fromFrame.getX() + i).isEmpty()) {
                     isIntersected = true;
                     break;
                 }
             }
-        }
         return isIntersected;
     }
 

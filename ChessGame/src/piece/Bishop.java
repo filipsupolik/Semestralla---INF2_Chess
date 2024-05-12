@@ -40,19 +40,20 @@ public class Bishop extends Piece {
     //AI generated code
     @Override
     public boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
-        boolean isIntersected = false;
-
         int deltaX = toFrame.getX() - fromFrame.getX();
         int deltaY = toFrame.getY() - fromFrame.getY();
-        // Movement direction: up-right
-        isIntersected = this.upRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY);
-        // Movement direction: up-left
-        isIntersected = this.upLeftMovementIntersection(chessBoard, fromFrame, deltaX, deltaY);
-        // Movement direction: down-right
-        isIntersected = this.downRightMovementIntersection(chessBoard, fromFrame, deltaX, deltaY);
-        // Movement direction: down-left
-        isIntersected = this.downLeftMovementIntersection(chessBoard, fromFrame, deltaX, deltaY);
-        return isIntersected;
-
+        if (deltaX > 0 && deltaY < 0) {
+            return this.upRightMovementIntersection(chessBoard, fromFrame, deltaX);
+        }
+        if (deltaX < 0 && deltaY < 0) {
+            return this.upLeftMovementIntersection(chessBoard, fromFrame, deltaX);
+        }
+        if (deltaX > 0 && deltaY > 0) {
+            return this.downRightMovementIntersection(chessBoard, fromFrame, deltaX);
+        }
+        if (deltaX < 0 && deltaY > 0) {
+            return this.downLeftMovementIntersection(chessBoard, fromFrame, deltaX);
+        }
+        return false;
     }
 }
