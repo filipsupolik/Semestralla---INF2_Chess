@@ -100,8 +100,21 @@ public class ChessGame {
         return true;
     }
 
-    public boolean isMate(PlayerType playerType) {
-        return true;
+    /*
+    TODO:Sach bude fungovat nasledovne: Kliknem na figurku a posuniem ju z fromFrame na toFrame. A potom budem overovat ze ci sa postavicka z toFrame moze pohnut na policko na ktorom sa nachadza kral. Ak ano a je tam enemy Kral tak bude sach inak nie
+     */
+    public boolean isCheck(PlayerType playerType) {
+        List<List<BoardFrame>> listChessBoard = this.convertTo2DList();
+        boolean validForCheck;
+        boolean pieceIntersection;
+        for (int i = 0; i < this.chessBoard.length; i++) {
+            for (int j = 0; j < this.chessBoard[i].length; j++) {
+                if (this.chessBoard[i][j].getPiece() instanceof King && !this.chessBoard[i][j].getPiece().getPlayerType().equals(playerType)) {
+                    Piece king = this.chessBoard[i][j].getPiece();
+                    validForCheck = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().isValidMove(this.chessBoard[][]);
+                }
+            }
+        }
     }
 
     public PlayerType getWinner() {
