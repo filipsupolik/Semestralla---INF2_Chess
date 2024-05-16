@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChessGame {
-    private boolean kingInCheck;
+    private boolean myKingInCheck;
     private Manager manager;
     private final BoardFrame[][] chessBoard;
     private Square[][] backgroundField;
@@ -23,7 +23,6 @@ public class ChessGame {
 
 
     public ChessGame () {
-        this.kingInCheck = false;
         this.manager = new Manager();
         this.suradnice = new ArrayList<>();
         this.suradnica = new Suradnice();
@@ -31,6 +30,7 @@ public class ChessGame {
         this.pocitadlo = 0;
         this.manager.manageObject(this);
         this.tahHraca = PlayerType.WHITE;
+        this.myKingInCheck = false;
 
         this.backgroundField = new Square[8][8];
         for (int i = 0; i < backgroundField.length; i++) {
@@ -102,9 +102,8 @@ public class ChessGame {
     public boolean isCheckMate(PlayerType playerType) {
         return true;
     }
-    /*
-   TODO:Sach bude fungovat nasledovne: Kliknem na figurku a posuniem ju z fromFrame na toFrame. A potom budem overovat ze ci sa postavicka z toFrame moze pohnut na policko na ktorom sa nachadza kral. Ak ano a je tam enemy Kral tak bude sach inak nie
-    */
+
+    //Overenie ci hrac, ktory je na tahu dava sach protihracovi
     public boolean isCheck(List<List<BoardFrame>> chessBoard,PlayerType playerType, BoardFrame fromFrame) {
         boolean check = false;
         Piece king = null;
@@ -126,12 +125,36 @@ public class ChessGame {
         }
         return check;
     }
+
+    //Overenie ci moj kral nedostal sach
+    public boolean myKinginCheck(List<List<BoardFrame>> chessBoard,PlayerType playerType) {
+        boolean check = false;
+        Piece king = null;
+        for (int i = 0; i < chessBoard.size(); i++) {
+            for (int j = 0; j < chessBoard.get(i).size(); j++) {
+                //Dostanem svojho krala k farbe hraca na tahu
+                if (chessBoard.get(i).get(j).getPiece() instanceof King && chessBoard.get(i).get(j).getPiece().getPlayerType().equals(playerType)) {
+                    king = chessBoard.get(i).get(j).getPiece();
+                }
+            }
+        }
+        for (int i = 0; i < chessBoard.size(); i++) {
+            for (int j = 0; j < chessBoard.get(i).size(); j++) {
+                if (!chessBoard.get(i).get(j).getPiece().getPlayerType().equals(king.getPlayerType())) {
+                    boolean validMoveOfEnemy = chessBoard.get(i).get(j).getPiece().isValidMove(chessBoard.get(i).get(j), chessBoard.get(king.getY()).get(king.getX()));
+                    boolean enemyIntersection = chessBoard.get(i).get(j).getPiece().anotherPieceInPositionIntersection(chessBoard,chessBoard.get(i).get(j), chessBoard.get(king.getY()).get(king.getX()));
+                    if (validMoveOfEnemy) {
+                        if (!enemyIntersection) {
+                            check = true;
+                        }
+                    }
+                }
+            }
+        }
+        return check;
+    }
     public PlayerType getWinner() {
         return PlayerType.BLACK;
-    }
-
-    public void closeFileWriter() {
-
     }
 
     public void vyberSuradnice(int x , int y) {
@@ -139,6 +162,7 @@ public class ChessGame {
     }
 
     public void kliknutie(int x , int y) {
+        List<List<BoardFrame>> listChessBoard = this.convertTo2DList();
         this.suradnica.konvertujPlohu(x , y , 840/8);
         if (this.pocitadlo == 0) {
             this.suradnice.add(this.suradnica.getY());
@@ -150,21 +174,19 @@ public class ChessGame {
             this.suradnice.add(this.suradnica.getY());
             this.suradnice.add(this.suradnica.getX());
 
-            List<List<BoardFrame>> listChessBoard = this.convertTo2DList();
             boolean valid = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().isValidMove(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
             boolean pieceIntersection = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().anotherPieceInPositionIntersection(listChessBoard,this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
-            boolean oppositeColor = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().checkColor(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
             if (this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().getPlayerType().equals(this.tahHraca)) {
-                if (valid) {
-                    if (!pieceIntersection) {
-                        if (!this.kingInCheck) {
+                if (valid && !pieceIntersection) {
                             this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().vymaz(chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
                             this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().move(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
                             BoardFrame toFrame = chessBoard[this.suradnice.get(2)][this.suradnice.get(3)];
-                            this.kingInCheck = this.isCheck(listChessBoard,this.tahHraca, toFrame);
+                            this.isCheck(listChessBoard, this.tahHraca, toFrame);
+                            this.myKingInCheck = this.myKinginCheck(listChessBoard, this.tahHraca);
                             this.zmenHraca();
-                        }
-                    }
+                } else if (valid && !pieceIntersection && this.myKingInCheck) {
+                    this.myKingInCheck = this.myKinginCheck(listChessBoard, this.tahHraca);
+                    JOptionPane.showMessageDialog(null, "Musis odstranit Sach inak sa nemozes pohnut");
                 }
                 System.out.println("Hrac na tahu");
                 System.out.println(this.tahHraca);

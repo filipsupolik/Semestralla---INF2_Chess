@@ -10,20 +10,18 @@ import java.util.List;
 public abstract class Piece {
     private int x;
     private int y;
-    private Image imageOfPiece;
+    private final Image imageOfPiece;
     private final PlayerType playerType;
-    private List<Piece> ereasedPieces;
 
     public Piece(PlayerType playerType, String imagePath, int x,int y) {
         this.x = x;
         this.y = y;
         this.imageOfPiece = new Image(imagePath, x*100, y*100);
         this.playerType = playerType;
-        this.ereasedPieces = new ArrayList<>();
     }
 
     public Image getImageOfPiece() {
-        return imageOfPiece;
+        return this.imageOfPiece;
     }
 
     public PlayerType getPlayerType() {
@@ -42,7 +40,7 @@ public abstract class Piece {
 
     public void move(BoardFrame fromFrame, BoardFrame toFrame) {
 
-        if (!isValidMove(fromFrame, toFrame)) {
+        if (!this.isValidMove(fromFrame, toFrame)) {
             System.out.println("nie je validny pohyb");
             return;
         }
@@ -178,7 +176,7 @@ public abstract class Piece {
     }
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public void setX(int x) {
@@ -186,7 +184,7 @@ public abstract class Piece {
     }
 
     public int getY() {
-        return y;
+        return this.y;
     }
 
     public void setY(int y) {
