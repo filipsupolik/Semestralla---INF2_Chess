@@ -7,10 +7,12 @@ import fri.shapesge.Square;
 import movement.Suradnice;
 import piece.*;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChessGame {
+    private boolean kingInCheck;
     private Manager manager;
     private final BoardFrame[][] chessBoard;
     private Square[][] backgroundField;
@@ -21,6 +23,7 @@ public class ChessGame {
 
 
     public ChessGame () {
+        this.kingInCheck = false;
         this.manager = new Manager();
         this.suradnice = new ArrayList<>();
         this.suradnica = new Suradnice();
@@ -99,24 +102,30 @@ public class ChessGame {
     public boolean isCheckMate(PlayerType playerType) {
         return true;
     }
-
     /*
-    TODO:Sach bude fungovat nasledovne: Kliknem na figurku a posuniem ju z fromFrame na toFrame. A potom budem overovat ze ci sa postavicka z toFrame moze pohnut na policko na ktorom sa nachadza kral. Ak ano a je tam enemy Kral tak bude sach inak nie
-     */
-    public boolean isCheck(PlayerType playerType) {
-        List<List<BoardFrame>> listChessBoard = this.convertTo2DList();
-        boolean validForCheck;
-        boolean pieceIntersection;
-        for (int i = 0; i < this.chessBoard.length; i++) {
-            for (int j = 0; j < this.chessBoard[i].length; j++) {
-                if (this.chessBoard[i][j].getPiece() instanceof King && !this.chessBoard[i][j].getPiece().getPlayerType().equals(playerType)) {
-                    Piece king = this.chessBoard[i][j].getPiece();
-                    validForCheck = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().isValidMove(this.chessBoard[][]);
+   TODO:Sach bude fungovat nasledovne: Kliknem na figurku a posuniem ju z fromFrame na toFrame. A potom budem overovat ze ci sa postavicka z toFrame moze pohnut na policko na ktorom sa nachadza kral. Ak ano a je tam enemy Kral tak bude sach inak nie
+    */
+    public boolean isCheck(List<List<BoardFrame>> chessBoard,PlayerType playerType, BoardFrame fromFrame) {
+        boolean check = false;
+        Piece king = null;
+        for (int i = 0; i < chessBoard.size(); i++) {
+            for (int j = 0; j < chessBoard.get(i).size(); j++) {
+                //Dostanem krala opacneho k farbe hraca na tahu
+                if (chessBoard.get(i).get(j).getPiece() instanceof King && !chessBoard.get(i).get(j).getPiece().getPlayerType().equals(playerType)) {
+                    king = chessBoard.get(i).get(j).getPiece();
                 }
             }
         }
+        boolean valid = chessBoard.get(fromFrame.getY()).get(fromFrame.getX()).getPiece().isValidMove(chessBoard.get(fromFrame.getY()).get(fromFrame.getX()), chessBoard.get(king.getY()).get(king.getX()));
+        boolean pieceIntersection = chessBoard.get(fromFrame.getY()).get(fromFrame.getX()).getPiece().anotherPieceInPositionIntersection(chessBoard,chessBoard.get(fromFrame.getY()).get(fromFrame.getX()), chessBoard.get(king.getY()).get(king.getX()));
+        if (valid) {
+            if (!pieceIntersection) {
+                check = true;
+                JOptionPane.showMessageDialog(null, "Sach");
+            }
+        }
+        return check;
     }
-
     public PlayerType getWinner() {
         return PlayerType.BLACK;
     }
@@ -148,11 +157,13 @@ public class ChessGame {
             if (this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().getPlayerType().equals(this.tahHraca)) {
                 if (valid) {
                     if (!pieceIntersection) {
-//                        if (oppositeColor) {
+                        if (!this.kingInCheck) {
                             this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().vymaz(chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
                             this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().move(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
+                            BoardFrame toFrame = chessBoard[this.suradnice.get(2)][this.suradnice.get(3)];
+                            this.kingInCheck = this.isCheck(listChessBoard,this.tahHraca, toFrame);
                             this.zmenHraca();
-//                        }
+                        }
                     }
                 }
                 System.out.println("Hrac na tahu");

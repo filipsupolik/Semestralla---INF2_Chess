@@ -81,13 +81,6 @@ public abstract class Piece {
         }
         return false;
     }
-    protected boolean collisionForPawnAndKing(BoardFrame toFrame) {
-        boolean isIntersected = false;
-        if (!toFrame.isEmpty()) {
-            isIntersected = true;
-        }
-        return isIntersected;
-    }
     protected boolean leftMovementIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
         boolean isIntersected = false;
         if (toFrame.getX() < fromFrame.getX()) {

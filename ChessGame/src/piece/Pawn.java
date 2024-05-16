@@ -70,6 +70,6 @@ public class Pawn extends Piece {
 
     @Override
     public boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
-        return this.collisionForPawnAndKing(toFrame);
+        return false;
     }
 }

@@ -19,8 +19,13 @@ public class Queen extends Piece {
         int frameFromY = fromFrame.getY();
         int frameToX = toFrame.getX();
         int frameToY = toFrame.getY();
+        int deltaX = frameToX - frameFromX;
+        int deltaY = frameToY - frameFromY;
 
-        if (notValidChessBoardBorderss(frameFromX, frameFromY, frameToX, frameToY)) {
+        boolean isStraightMove = (deltaX == 0 || deltaY == 0);
+        boolean isDiagonalMove = Math.abs(deltaX) == Math.abs(deltaY);
+
+        if (!isStraightMove && !isDiagonalMove) {
             return false;
         }
 
