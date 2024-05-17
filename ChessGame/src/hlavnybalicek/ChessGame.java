@@ -99,6 +99,9 @@ public class ChessGame {
         }
     }
 
+    /*
+    TODO: Dorobit Sach mat
+     */
     public boolean isCheckMate(PlayerType playerType) {
         return true;
     }
@@ -117,11 +120,9 @@ public class ChessGame {
         }
         boolean valid = chessBoard.get(fromFrame.getY()).get(fromFrame.getX()).getPiece().isValidMove(chessBoard.get(fromFrame.getY()).get(fromFrame.getX()), chessBoard.get(king.getY()).get(king.getX()));
         boolean pieceIntersection = chessBoard.get(fromFrame.getY()).get(fromFrame.getX()).getPiece().anotherPieceInPositionIntersection(chessBoard,chessBoard.get(fromFrame.getY()).get(fromFrame.getX()), chessBoard.get(king.getY()).get(king.getX()));
-        if (valid) {
-            if (!pieceIntersection) {
+        if (valid && !pieceIntersection) {
                 check = true;
                 JOptionPane.showMessageDialog(null, "Sach");
-            }
         }
         return check;
     }
@@ -143,11 +144,9 @@ public class ChessGame {
                 if (!chessBoard.get(i).get(j).getPiece().getPlayerType().equals(king.getPlayerType())) {
                     boolean validMoveOfEnemy = chessBoard.get(i).get(j).getPiece().isValidMove(chessBoard.get(i).get(j), chessBoard.get(king.getY()).get(king.getX()));
                     boolean enemyIntersection = chessBoard.get(i).get(j).getPiece().anotherPieceInPositionIntersection(chessBoard,chessBoard.get(i).get(j), chessBoard.get(king.getY()).get(king.getX()));
-                    if (validMoveOfEnemy) {
-                        if (!enemyIntersection) {
+                        if (validMoveOfEnemy && !enemyIntersection) {
                             check = true;
                         }
-                    }
                 }
             }
         }
@@ -162,7 +161,7 @@ public class ChessGame {
     }
 
     public void kliknutie(int x , int y) {
-        List<List<BoardFrame>> listChessBoard = this.convertTo2DList();
+        List<List<BoardFrame>> listChessBoard = this.convertTo2DList(this.chessBoard);
         this.suradnica.konvertujPlohu(x , y , 840/8);
         if (this.pocitadlo == 0) {
             this.suradnice.add(this.suradnica.getY());
@@ -171,20 +170,19 @@ public class ChessGame {
             this.pocitadlo++;
         } else {
             this.pocitadlo = 0;
-            this.suradnice.add(this.suradnica.getY());
-            this.suradnice.add(this.suradnica.getX());
-
-            boolean valid = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().isValidMove(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
-            boolean pieceIntersection = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().anotherPieceInPositionIntersection(listChessBoard,this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
+                this.suradnice.add(this.suradnica.getY());
+                this.suradnice.add(this.suradnica.getX());
             if (this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().getPlayerType().equals(this.tahHraca)) {
-                if (valid && !pieceIntersection) {
-                            this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().vymaz(chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
-                            this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().move(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
-                            BoardFrame toFrame = chessBoard[this.suradnice.get(2)][this.suradnice.get(3)];
-                            this.isCheck(listChessBoard, this.tahHraca, toFrame);
-                            this.myKingInCheck = this.myKinginCheck(listChessBoard, this.tahHraca);
-                            this.zmenHraca();
-                } else if (valid && !pieceIntersection && this.myKingInCheck) {
+                boolean valid = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().isValidMove(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
+                boolean pieceIntersection = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().anotherPieceInPositionIntersection(listChessBoard,this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
+                if (valid && !pieceIntersection && this.canMovePieceKingInChess(listChessBoard)) {
+                    this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().vymaz(chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
+                    this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().move(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
+                    BoardFrame toFrame = chessBoard[this.suradnice.get(2)][this.suradnice.get(3)];
+                    this.isCheck(listChessBoard, this.tahHraca, toFrame);
+                    this.myKingInCheck = this.myKinginCheck(listChessBoard, this.tahHraca);
+                    this.zmenHraca();
+                } else if (this.myKingInCheck) {
                     this.myKingInCheck = this.myKinginCheck(listChessBoard, this.tahHraca);
                     JOptionPane.showMessageDialog(null, "Musis odstranit Sach inak sa nemozes pohnut");
                 }
@@ -193,10 +191,10 @@ public class ChessGame {
             }
 
             System.out.println("Druhy klik");
-            System.out.println(this.suradnice.get(2));
-            System.out.println(this.suradnice.get(3));
-            this.suradnice.clear();
-        }
+                System.out.println(this.suradnice.get(2));
+                System.out.println(this.suradnice.get(3));
+                this.suradnice.clear();
+            }
     }
 
     public PlayerType zmenHraca() {
@@ -209,10 +207,10 @@ public class ChessGame {
     }
 
     //Code taken from AI, chatGPT
-    public List<List<BoardFrame>> convertTo2DList() {
+    public List<List<BoardFrame>> convertTo2DList(BoardFrame[][] chessBoard) {
         List<List<BoardFrame>> list = new ArrayList<>();
 
-        for (BoardFrame[] row : this.chessBoard) {
+        for (BoardFrame[] row : chessBoard) {
             List<BoardFrame> rowList = new ArrayList<>();
             for (BoardFrame frame : row) {
                 rowList.add(frame);
@@ -221,5 +219,37 @@ public class ChessGame {
         }
 
         return list;
+    }
+
+    //Metoda upravena pomocou AI
+    public boolean canMovePieceKingInChess(List<List<BoardFrame>> list) {
+        Piece movingPiece = chessBoard[suradnice.get(0)][suradnice.get(1)].getPiece();
+
+        // Prechádzanie všetkých možných ťahov figúrky
+        for (int i = 0; i < chessBoard.length; i++) {
+            for (int j = 0; j < chessBoard[i].length; j++) {
+                if (this.chessBoard[suradnice.get(0)][suradnice.get(1)].getPiece().isValidMove(chessBoard[suradnice.get(0)][suradnice.get(1)], chessBoard[i][j])) {
+                    // Presun figúrky na možnú pozíciu
+                    Piece tempPiece = chessBoard[i][j].getPiece();
+                    chessBoard[i][j].setPiece(movingPiece);
+                    chessBoard[suradnice.get(0)][suradnice.get(1)].setPiece(new Empty(PlayerType.EMPTY, "piece/b-bishop.png", suradnice.get(0), suradnice.get(1)));
+
+                    // Kontrola, či táto pozícia nevedie k šachu
+                    boolean kingInCheck = myKinginCheck(list, this.tahHraca);
+
+                    // Vrátenie figúrky späť na pôvodnú pozíciu
+                    chessBoard[suradnice.get(0)][suradnice.get(1)].setPiece(movingPiece);
+                    chessBoard[i][j].setPiece(tempPiece);
+
+                    // Ak ťah zruší šach, vrátiť true
+                    if (!kingInCheck) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // Ak žiadny ťah nezruší šach, vrátiť false
+        return false;
     }
 }

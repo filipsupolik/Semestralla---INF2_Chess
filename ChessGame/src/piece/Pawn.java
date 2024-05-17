@@ -22,41 +22,48 @@ public class Pawn extends Piece {
         int frameFromY = fromFrame.getY();
         int frameToX = toFrame.getX();
         int frameToY = toFrame.getY();
+        int deltaX = frameToX - frameFromX;
+        int deltaY = frameToY - frameFromY;
 
         if (notValidChessBoardBorderss(frameFromX, frameFromY, frameToX, frameToY)) return false;
 
         if (Math.abs(frameFromY - frameToY) > 2) {
-            System.out.println("Vacsi rozdiel ako 2");
             return false;
         }
 
         if (fromFrame.getPiece().getPlayerType().equals(PlayerType.BLACK) && Math.abs(frameFromY- frameToY) > 1 && !(frameFromY == 1)) {
-            System.out.println("Rozdiel vacsi ako 1 po 1 tahu Cierny");
             return false;
         }
 
         if (fromFrame.getPiece().getPlayerType().equals(PlayerType.WHITE) && Math.abs(frameFromY- frameToY) > 1 && !(frameFromY == 6)) {
-            System.out.println("Rozdiel vacsi ako 1 po 1 tahu Biely");
             return false;
         }
 
-        if (!(toFrame.getPiece() instanceof Empty) && !(toFrame.getPiece().getPlayerType().equals(fromFrame.getPiece().getPlayerType())) && Math.abs(frameFromX - frameToX) != 1) {
-            System.out.println("Ak je inej farby panacik");
+        if (deltaX == -1 && deltaY == 1 && toFrame.isEmpty()){
+            return false;
+        }
+
+        if (deltaX == 1 && deltaY == 1 && toFrame.isEmpty()){
+            return false;
+        }
+
+        if (deltaX == -1 && deltaY == -1 && toFrame.isEmpty()){
+            return false;
+        }
+
+        if (deltaX == 1 && deltaY == -1 && toFrame.isEmpty()){
             return false;
         }
 
         if (fromFrame.getPiece().getPlayerType().equals(PlayerType.BLACK) && frameFromY > frameToY) {
-            System.out.println("neplatny tah spatny chod Cierny");
             return false;
         }
 
         if (fromFrame.getPiece().getPlayerType().equals(PlayerType.WHITE) && frameToY > frameFromY) {
-            System.out.println("neplatny tah spatny chod Biely");
             return false;
         }
 
         if (Math.abs(frameFromX - frameToX) > 0 && toFrame.getPiece() instanceof Empty) {
-            System.out.println("Nemoze do boku ak tam nie je iny panacik");
             return false;
         }
 
@@ -70,6 +77,6 @@ public class Pawn extends Piece {
 
     @Override
     public boolean anotherPieceInPositionIntersection(List<List<BoardFrame>> chessBoard, BoardFrame fromFrame, BoardFrame toFrame) {
-        return false;
+        return this.upperMovementIntersection(chessBoard, fromFrame, toFrame) || this.downMovementIntersection(chessBoard, fromFrame, toFrame);
     }
 }
