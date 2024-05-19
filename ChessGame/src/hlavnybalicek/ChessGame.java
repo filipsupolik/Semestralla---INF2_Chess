@@ -2,15 +2,24 @@ package hlavnybalicek;
 
 import enums.PlayerType;
 import fri.shapesge.Manager;
-
 import fri.shapesge.Square;
 import movement.Suradnice;
-import piece.*;
+import piece.Bishop;
+import piece.Empty;
+import piece.King;
+import piece.Knight;
+import piece.Pawn;
+import piece.Piece;
+import piece.Queen;
+import piece.Rook;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The ChessGame class represents a game of chess, managing the game board, pieces, and player turns.
+ */
 public class ChessGame {
     private boolean myKingInCheck;
     private Manager manager;
@@ -21,7 +30,9 @@ public class ChessGame {
     private int pocitadlo;
     private PlayerType tahHraca;
 
-
+    /**
+     * Constructs a new ChessGame, initializing the board and setting up the pieces.
+     */
     public ChessGame () {
         this.manager = new Manager();
         this.suradnice = new ArrayList<>();
@@ -33,19 +44,19 @@ public class ChessGame {
         this.myKingInCheck = false;
 
         this.backgroundField = new Square[8][8];
-        for (int i = 0; i < backgroundField.length; i++) {
-            for (int j = 0; j < backgroundField[i].length; j++) {
-                backgroundField[i][j] = new Square(0,0);
+        for (int i = 0; i < this.backgroundField.length; i++) {
+            for (int j = 0; j < this.backgroundField[i].length; j++) {
+                this.backgroundField[i][j] = new Square(0, 0);
                 int sum = i + j;
                 if ((sum % 2 == 0)) {
-                    backgroundField[i][j].changeColor("white");
+                    this.backgroundField[i][j].changeColor("white");
                 } else {
-                    backgroundField[i][j].changeColor("black");
+                    this.backgroundField[i][j].changeColor("black");
                 }
-                backgroundField[i][j].changeSize(100);
-                backgroundField[i][j].moveHorizontal(j*100);
-                backgroundField[i][j].moveVertical(i*100);
-                backgroundField[i][j].makeVisible();
+                this.backgroundField[i][j].changeSize(100);
+                this.backgroundField[i][j].moveHorizontal(j * 100);
+                this.backgroundField[i][j].moveVertical(i * 100);
+                this.backgroundField[i][j].makeVisible();
             }
         }
 
@@ -99,104 +110,144 @@ public class ChessGame {
         }
     }
 
-    /*
-    TODO: Dorobit Sach mat
+    /**
+     * Checks if the specified player is in checkmate.
+     *
+     * @param playerType the player type to check for checkmate
+     * @return true if the player is in checkmate, false otherwise
      */
     public boolean isCheckMate(PlayerType playerType) {
+        // TODO: Implement checkmate logic
         return true;
     }
 
-    //Overenie ci hrac, ktory je na tahu dava sach protihracovi
-    public boolean isCheck(List<List<BoardFrame>> chessBoard,PlayerType playerType, BoardFrame fromFrame) {
+    /**
+     * Checks if the player on turn gives check to the opponent.
+     *
+     * @param chessBoard the current state of the chessboard
+     * @param playerType the player type to check
+     * @param fromFrame  the frame from which the move is made
+     * @return true if the opponent's king is in check, false otherwise
+     */
+    public boolean isCheck(List<List<BoardFrame>> chessBoard, PlayerType playerType, BoardFrame fromFrame) {
         boolean check = false;
         Piece king = null;
-        for (int i = 0; i < chessBoard.size(); i++) {
-            for (int j = 0; j < chessBoard.get(i).size(); j++) {
-                //Dostanem krala opacneho k farbe hraca na tahu
-                if (chessBoard.get(i).get(j).getPiece() instanceof King && !chessBoard.get(i).get(j).getPiece().getPlayerType().equals(playerType)) {
-                    king = chessBoard.get(i).get(j).getPiece();
+        for (List<BoardFrame> row : chessBoard) {
+            for (BoardFrame frame : row) {
+                // Get the opponent's king
+                if (frame.getPiece() instanceof King && !frame.getPiece().getPlayerType().equals(playerType)) {
+                    king = frame.getPiece();
                 }
             }
         }
         boolean valid = chessBoard.get(fromFrame.getY()).get(fromFrame.getX()).getPiece().isValidMove(chessBoard.get(fromFrame.getY()).get(fromFrame.getX()), chessBoard.get(king.getY()).get(king.getX()));
-        boolean pieceIntersection = chessBoard.get(fromFrame.getY()).get(fromFrame.getX()).getPiece().anotherPieceInPositionIntersection(chessBoard,chessBoard.get(fromFrame.getY()).get(fromFrame.getX()), chessBoard.get(king.getY()).get(king.getX()));
+        boolean pieceIntersection = chessBoard.get(fromFrame.getY()).get(fromFrame.getX()).getPiece().anotherPieceInPositionIntersection(chessBoard, chessBoard.get(fromFrame.getY()).get(fromFrame.getX()), chessBoard.get(king.getY()).get(king.getX()));
         if (valid && !pieceIntersection) {
-                check = true;
-                JOptionPane.showMessageDialog(null, "Sach");
+            check = true;
+            JOptionPane.showMessageDialog(null, "Check");
         }
         return check;
     }
 
-    //Overenie ci moj kral nedostal sach
-    public boolean myKinginCheck(List<List<BoardFrame>> chessBoard,PlayerType playerType) {
+    /**
+     * Checks if the current player's king is in check.
+     *
+     * @param chessBoard the current state of the chessboard
+     * @param playerType the player type to check
+     * @return true if the player's king is in check, false otherwise
+     */
+    public boolean myKinginCheck(List<List<BoardFrame>> chessBoard, PlayerType playerType) {
         boolean check = false;
         Piece king = null;
-        for (int i = 0; i < chessBoard.size(); i++) {
-            for (int j = 0; j < chessBoard.get(i).size(); j++) {
-                //Dostanem svojho krala k farbe hraca na tahu
-                if (chessBoard.get(i).get(j).getPiece() instanceof King && chessBoard.get(i).get(j).getPiece().getPlayerType().equals(playerType)) {
-                    king = chessBoard.get(i).get(j).getPiece();
+        for (List<BoardFrame> row : chessBoard) {
+            for (BoardFrame frame : row) {
+                // Get the current player's king
+                if (frame.getPiece() instanceof King && frame.getPiece().getPlayerType().equals(playerType)) {
+                    king = frame.getPiece();
                 }
             }
         }
-        for (int i = 0; i < chessBoard.size(); i++) {
-            for (int j = 0; j < chessBoard.get(i).size(); j++) {
-                if (!chessBoard.get(i).get(j).getPiece().getPlayerType().equals(king.getPlayerType())) {
-                    boolean validMoveOfEnemy = chessBoard.get(i).get(j).getPiece().isValidMove(chessBoard.get(i).get(j), chessBoard.get(king.getY()).get(king.getX()));
-                    boolean enemyIntersection = chessBoard.get(i).get(j).getPiece().anotherPieceInPositionIntersection(chessBoard,chessBoard.get(i).get(j), chessBoard.get(king.getY()).get(king.getX()));
-                        if (validMoveOfEnemy && !enemyIntersection) {
-                            check = true;
-                        }
+        for (List<BoardFrame> row : chessBoard) {
+            for (BoardFrame frame : row) {
+                if (!frame.getPiece().getPlayerType().equals(king.getPlayerType())) {
+                    boolean validMoveOfEnemy = frame.getPiece().isValidMove(frame, chessBoard.get(king.getY()).get(king.getX()));
+                    boolean enemyIntersection = frame.getPiece().anotherPieceInPositionIntersection(chessBoard, frame, chessBoard.get(king.getY()).get(king.getX()));
+                    if (validMoveOfEnemy && !enemyIntersection) {
+                        check = true;
+                    }
                 }
             }
         }
         return check;
     }
+
+    /**
+     * Gets the winner of the game.
+     *
+     * @return the player type of the winner
+     */
     public PlayerType getWinner() {
         return PlayerType.BLACK;
     }
 
-    public void vyberSuradnice(int x , int y) {
-        this.kliknutie(x , y);
+    /**
+     * Selects the coordinates of a square on the board.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     */
+    public void vyberSuradnice(int x, int y) {
+        this.kliknutie(x, y);
     }
 
-    public void kliknutie(int x , int y) {
+    /**
+     * Handles the logic for a click on the board.
+     *
+     * @param x the x-coordinate of the click
+     * @param y the y-coordinate of the click
+     */
+    public void kliknutie(int x, int y) {
         List<List<BoardFrame>> listChessBoard = this.convertTo2DList(this.chessBoard);
-        this.suradnica.konvertujPlohu(x , y , 840/8);
+        this.suradnica.konvertujPlohu(x, y, 840 / 8);
         if (this.pocitadlo == 0) {
             this.suradnice.add(this.suradnica.getY());
             this.suradnice.add(this.suradnica.getX());
-            System.out.println("Prvy klik");
+            System.out.println("First click");
             this.pocitadlo++;
         } else {
             this.pocitadlo = 0;
-                this.suradnice.add(this.suradnica.getY());
-                this.suradnice.add(this.suradnica.getX());
+            this.suradnice.add(this.suradnica.getY());
+            this.suradnice.add(this.suradnica.getX());
             if (this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().getPlayerType().equals(this.tahHraca)) {
-                boolean valid = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().isValidMove(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
-                boolean pieceIntersection = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().anotherPieceInPositionIntersection(listChessBoard,this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
+                boolean valid = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().isValidMove(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], this.chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
+                boolean pieceIntersection = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().anotherPieceInPositionIntersection(listChessBoard, this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], this.chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
                 if (valid && !pieceIntersection && this.canMovePieceKingInChess(listChessBoard)) {
-                    this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().vymaz(chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
-                    this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().move(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
-                    BoardFrame toFrame = chessBoard[this.suradnice.get(2)][this.suradnice.get(3)];
+                    this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().vymaz(this.chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
+                    this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().move(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], this.chessBoard[this.suradnice.get(2)][this.suradnice.get(3)]);
+                    BoardFrame toFrame = this.chessBoard[this.suradnice.get(2)][this.suradnice.get(3)];
                     this.isCheck(listChessBoard, this.tahHraca, toFrame);
                     this.myKingInCheck = this.myKinginCheck(listChessBoard, this.tahHraca);
                     this.zmenHraca();
                 } else if (this.myKingInCheck) {
                     this.myKingInCheck = this.myKinginCheck(listChessBoard, this.tahHraca);
-                    JOptionPane.showMessageDialog(null, "Musis odstranit Sach inak sa nemozes pohnut");
+                    JOptionPane.showMessageDialog(null, "You must remove the check before making a move.");
                 }
-                System.out.println("Hrac na tahu");
+                System.out.println("Player's turn");
                 System.out.println(this.tahHraca);
             }
 
-            System.out.println("Druhy klik");
-                System.out.println(this.suradnice.get(2));
-                System.out.println(this.suradnice.get(3));
-                this.suradnice.clear();
-            }
+            System.out.println("Second click");
+            System.out.println(this.suradnice.get(2));
+            System.out.println(this.suradnice.get(3));
+            this.suradnice.clear();
+        }
     }
 
+    /**
+     * Changes the player turn.
+     *
+     * @return the player type of the next player
+     */
     public PlayerType zmenHraca() {
         if (this.tahHraca.equals(PlayerType.WHITE)) {
             this.tahHraca = PlayerType.BLACK;
@@ -206,7 +257,12 @@ public class ChessGame {
         return this.tahHraca;
     }
 
-    //Code taken from AI, chatGPT
+    /**
+     * Converts the 2D array of BoardFrame objects to a list of lists of BoardFrame objects.
+     *
+     * @param chessBoard the 2D array to convert
+     * @return the converted list of lists
+     */
     public List<List<BoardFrame>> convertTo2DList(BoardFrame[][] chessBoard) {
         List<List<BoardFrame>> list = new ArrayList<>();
 
@@ -221,27 +277,32 @@ public class ChessGame {
         return list;
     }
 
-    //Metoda upravena pomocou AI
+    /**
+     * Checks if a piece can move without putting the king in check.
+     *
+     * @param list the current state of the chessboard
+     * @return true if the piece can move without putting the king in check, false otherwise
+     */
     public boolean canMovePieceKingInChess(List<List<BoardFrame>> list) {
-        Piece movingPiece = chessBoard[suradnice.get(0)][suradnice.get(1)].getPiece();
+        Piece movingPiece = this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece();
 
-        // Prechádzanie všetkých možných ťahov figúrky
-        for (int i = 0; i < chessBoard.length; i++) {
-            for (int j = 0; j < chessBoard[i].length; j++) {
-                if (this.chessBoard[suradnice.get(0)][suradnice.get(1)].getPiece().isValidMove(chessBoard[suradnice.get(0)][suradnice.get(1)], chessBoard[i][j])) {
-                    // Presun figúrky na možnú pozíciu
-                    Piece tempPiece = chessBoard[i][j].getPiece();
-                    chessBoard[i][j].setPiece(movingPiece);
-                    chessBoard[suradnice.get(0)][suradnice.get(1)].setPiece(new Empty(PlayerType.EMPTY, "piece/b-bishop.png", suradnice.get(0), suradnice.get(1)));
+        // Iterate through all possible moves of the piece
+        for (int i = 0; i < this.chessBoard.length; i++) {
+            for (int j = 0; j < this.chessBoard[i].length; j++) {
+                if (this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].getPiece().isValidMove(this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)], this.chessBoard[i][j])) {
+                    // Move the piece to the possible position
+                    Piece tempPiece = this.chessBoard[i][j].getPiece();
+                    this.chessBoard[i][j].setPiece(movingPiece);
+                    this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].setPiece(new Empty(PlayerType.EMPTY, "piece/b-bishop.png", this.suradnice.get(0), this.suradnice.get(1)));
 
-                    // Kontrola, či táto pozícia nevedie k šachu
-                    boolean kingInCheck = myKinginCheck(list, this.tahHraca);
+                    // Check if this position leads to a check
+                    boolean kingInCheck = this.myKinginCheck(list, this.tahHraca);
 
-                    // Vrátenie figúrky späť na pôvodnú pozíciu
-                    chessBoard[suradnice.get(0)][suradnice.get(1)].setPiece(movingPiece);
-                    chessBoard[i][j].setPiece(tempPiece);
+                    // Return the piece to its original position
+                    this.chessBoard[this.suradnice.get(0)][this.suradnice.get(1)].setPiece(movingPiece);
+                    this.chessBoard[i][j].setPiece(tempPiece);
 
-                    // Ak ťah zruší šach, vrátiť true
+                    // If the move cancels the check, return true
                     if (!kingInCheck) {
                         return true;
                     }
@@ -249,7 +310,7 @@ public class ChessGame {
             }
         }
 
-        // Ak žiadny ťah nezruší šach, vrátiť false
+        // If no move cancels the check, return false
         return false;
     }
 }
